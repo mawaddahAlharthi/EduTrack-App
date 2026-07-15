@@ -97,11 +97,31 @@ function computeNormalizedGrade(row, scoreColumns, columnMaxes) {
   return normalizedValues.reduce((a, b) => a + b, 0) / normalizedValues.length
 }
 
-export function analyzeData(data) {
+export function analyzeData(data, aiOverride = null) {
   const detected = detectColumns(data)
   if (!detected || detected.scoreColumns.length === 0) return null
 
-  const { scoreColumns, attendanceColumn } = detected
+  // لو الذكاء الاصطناعي حدد أعمدة ولابيلات، نستخدمها بدل الاكتشاف التلقائي
+  let scoreColumns = detected.scoreColumns
+  let attendanceColumn = detected.attendanceColumn
+  let labelsMap = {}
+
+  if (aiOverride && aiOverride.scoreColumns && aiOverride.scoreColumns.length > 0) {
+    const validColumns = aiOverride.scoreColumns
+      .map((c) => c.original)
+      .filter((col) => data[0] && Object.prototype.hasOwnProperty.call(data[0], col))
+
+    if (validColumns.length > 0) {
+      scoreColumns = validColumns
+      aiOverride.scoreColumns.forEach((c) => {
+        labelsMap[c.original] = c.label
+      })
+    }
+
+    if (aiOverride.attendanceColumn && data[0] && Object.prototype.hasOwnProperty.call(data[0], aiOverride.attendanceColumn)) {
+      attendanceColumn = aiOverride.attendanceColumn
+    }
+  }
 
   // نحسب "السقف" الفعلي لكل عمود درجات، وكذلك لعمود الحضور إن وجد
   const columnMaxes = {}
@@ -159,12 +179,12 @@ export function analyzeData(data) {
   ]
 
   // متوسط الأداء لكل عمود، مطبّع كنسبة من سقفه الفعلي — عشان الأعمدة تكون قابلة للمقارنة بصرياً
-  const componentAverages = scoreColumns.map((col) => {
+ const componentAverages = scoreColumns.map((col) => {
     const max = columnMaxes[col]
     const values = data.map((row) => row[col]).filter((v) => typeof v === 'number' && !isNaN(v))
     const rawAvg = values.reduce((a, b) => a + b, 0) / values.length
     const normalizedAvg = max ? (rawAvg / max) * 100 : 0
-    return { clo: col, mastered: Math.round(normalizedAvg), total: 100 }
+    return { clo: labelsMap[col] || col, mastered: Math.round(normalizedAvg), total: 100 }
   })
 
   const weakest = [...componentAverages].sort((a, b) => a.mastered - b.mastered)[0]
@@ -193,11 +213,18 @@ export function analyzeData(data) {
     },
   ]
 
+ // لو الذكاء الاصطناعي أعطانا توصيات مبنية على الفهم الفعلي، نستخدمها بدل التوصيات الآلية
+  const finalRecommendations =
+    aiOverride && aiOverride.recommendations && aiOverride.recommendations.length > 0
+      ? aiOverride.recommendations.map((r, i) => ({ id: i + 1, ...r }))
+      : recommendations
+
   return {
     summary: { totalStudents, passRate, averageGrade: Math.round(averageGrade * 10) / 10, atRiskCount },
     riskDistribution,
     componentAverages,
-    recommendations,
+    recommendations: finalRecommendations,
     scoreColumns,
+    usedAI: !!(aiOverride && aiOverride.scoreColumns),
   }
 }

@@ -6,8 +6,9 @@ import Dashboard from './components/Dashboard'
 import Layout from './components/Layout'
 import SimulatorScreen from './components/SimulatorScreen'
 import RecommendationsScreen from './components/RecommendationsScreen'
-import { parseFile } from './utils/parseFile'
+import { parseFile, getFileSample } from './utils/parseFile'
 import { analyzeData } from './utils/analyzeData'
+import { tryAIAnalyze } from './utils/aiAnalyze'
 import { sampleStudents } from './data/sampleData'
 
 function App() {
@@ -15,10 +16,20 @@ function App() {
   const [analysis, setAnalysis] = useState(null)
   const [rawData, setRawData] = useState(null)
   const [activeTab, setActiveTab] = useState('dashboard')
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const handleFileReady = async (file) => {
+    setIsProcessing(true)
     const data = await parseFile(file)
-    const result = analyzeData(data)
+
+    // نحاول الذكاء الاصطناعي أول، بصمت وبدون ما نوقف المستخدم لو فشل
+    const sample = getFileSample(data)
+    const aiResult = sample ? await tryAIAnalyze(sample.columns, sample.sampleRows) : null
+
+    // القواعد الذكية تشتغل دائماً كأساس، وتتحسن لو توفر تحليل AI
+    const result = analyzeData(data, aiResult)
+
+    setIsProcessing(false)
 
     if (!result) {
       alert('عذراً، ما قدرنا نلقى أعمدة درجات كافية بهذا الملف. جربي ملف آخر أو استخدمي البيانات التجريبية.')
@@ -32,7 +43,6 @@ function App() {
 
   const handleUseSampleData = () => {
     setAnalysis(null)
-    // بيانات تجريبية بديلة للمحاكي (نفس بنية sampleStudents)
     setRawData(sampleStudents)
     setStep('dashboard')
   }
@@ -46,10 +56,15 @@ function App() {
   }
 
   if (step === 'upload') {
-    return <UploadScreen onFileReady={handleFileReady} onUseSampleData={handleUseSampleData} />
+    return (
+      <UploadScreen
+        onFileReady={handleFileReady}
+        onUseSampleData={handleUseSampleData}
+        isProcessing={isProcessing}
+      />
+    )
   }
 
-  // أعمدة الدرجات: من التحليل الحقيقي لو موجود، أو أعمدة البيانات التجريبية الافتراضية
   const scoreColumns = analysis?.scoreColumns ?? ['continuousAssessment', 'finalExam']
 
   return (

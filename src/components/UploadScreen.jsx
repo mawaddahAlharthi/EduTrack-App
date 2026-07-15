@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { UploadCloud, FileSpreadsheet, Sparkles } from 'lucide-react'
 
-function UploadScreen({ onFileReady, onUseSampleData }) {
+function UploadScreen({ onFileReady, onUseSampleData, isProcessing }) {
   const [isDragging, setIsDragging] = useState(false)
   const [fileName, setFileName] = useState(null)
 
@@ -74,8 +74,7 @@ function UploadScreen({ onFileReady, onUseSampleData }) {
         </label>
       </motion.div>
 
-      {/* زر البيانات التجريبية */}
-      <motion.button
+     <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
@@ -87,6 +86,16 @@ function UploadScreen({ onFileReady, onUseSampleData }) {
         <Sparkles size={18} className="text-yellow-400" />
         جرّبي بيانات تجريبية بدون رفع ملف
       </motion.button>
+
+      {isProcessing && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-6 text-blue-400 text-sm"
+        >
+          جاري تحليل البيانات...
+        </motion.p>
+      )}
 
     </div>
   )
