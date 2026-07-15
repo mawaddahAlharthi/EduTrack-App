@@ -73,7 +73,8 @@ ${JSON.stringify(sampleRows, null, 2)}
     })
 
     if (!response.ok) {
-      return new Response(JSON.stringify({ error: 'api_error' }), {
+      const errorText = await response.text()
+      return new Response(JSON.stringify({ error: 'api_error', status: response.status, details: errorText }), {
         status: 502,
         headers: { 'Content-Type': 'application/json' },
       })
