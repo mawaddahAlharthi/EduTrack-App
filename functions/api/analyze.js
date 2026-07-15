@@ -75,4 +75,25 @@ ${JSON.stringify(sampleRows, null, 2)}
     }
 
     const data = await response.json()
-    const textContent =
+    const textContent = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+
+    const cleaned = textContent.replace(/```json|```/g, '').trim()
+    const parsed = JSON.parse(cleaned)
+
+    if (env.EDUTRACK_KV) {
+      await env.EDUTRACK_KV.put(usageKey, String(currentUsage + 1), {
+        expirationTtl: 60 * 60 * 24 * 2,
+      })
+    }
+
+    return new Response(JSON.stringify({ success: true, analysis: parsed }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  } catch (err) {
+    return new Response(JSON.stringify({ error: 'server_error', message: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+}
