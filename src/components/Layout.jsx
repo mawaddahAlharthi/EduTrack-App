@@ -1,8 +1,7 @@
-import { LayoutDashboard, SlidersHorizontal, ClipboardList } from 'lucide-react'
+import { LayoutDashboard, ClipboardList } from 'lucide-react'
 
 const tabs = [
   { id: 'dashboard', label: 'لوحة التحكم', icon: LayoutDashboard },
-  { id: 'simulator', label: 'محاكي ماذا-لو', icon: SlidersHorizontal },
   { id: 'recommendations', label: 'التوصيات', icon: ClipboardList },
 ]
 

@@ -4,7 +4,6 @@ import GuideScreen from './components/GuideScreen'
 import UploadScreen from './components/UploadScreen'
 import Dashboard from './components/Dashboard'
 import Layout from './components/Layout'
-import SimulatorScreen from './components/SimulatorScreen'
 import RecommendationsScreen from './components/RecommendationsScreen'
 import { parseFile, getFileSample } from './utils/parseFile'
 import { analyzeData } from './utils/analyzeData'
@@ -65,14 +64,11 @@ function App() {
     )
   }
 
-  const scoreColumns = analysis?.scoreColumns ?? ['continuousAssessment', 'finalExam']
+  
 
   return (
     <Layout activeTab={activeTab} onTabChange={setActiveTab}>
       {activeTab === 'dashboard' && <Dashboard analysis={analysis} />}
-      {activeTab === 'simulator' && (
-        <SimulatorScreen rawData={rawData} scoreColumns={scoreColumns} />
-      )}
       {activeTab === 'recommendations' && <RecommendationsScreen analysis={analysis} />}
     </Layout>
   )
