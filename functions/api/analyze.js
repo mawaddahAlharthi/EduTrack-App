@@ -47,7 +47,7 @@ ${JSON.stringify(sampleRows, null, 2)}
 3. حدد عمود الحضور إن وجد
 4. اكتب 3 توصيات ذكية مبنية على المعنى الفعلي للأعمدة، وليس فقط الاسم التقني
 
-أجب فقط بصيغة JSON بدون أي نص إضافي، بهذا الشكل بالضبط:
+أجب فقط بصيغة JSON صحيحة وكاملة بدون أي نص إضافي قبلها أو بعدها. تجنبي استخدام علامات تنصيص مزدوجة (") داخل النصوص العربية نفسها. اجعلي كل نص (title, reason, action) لا يتجاوز 20 كلمة. الشكل المطلوب بالضبط:
 {
   "scoreColumns": [{"original": "اسم العمود الأصلي", "label": "الاسم العربي المفهوم"}],
   "attendanceColumn": "اسم عمود الحضور أو null",
@@ -65,7 +65,7 @@ ${JSON.stringify(sampleRows, null, 2)}
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 1500,
+        max_tokens: 2500,
         messages: [{ role: 'user', content: prompt }],
       }),
     })
