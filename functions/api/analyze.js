@@ -55,16 +55,19 @@ ${JSON.stringify(sampleRows, null, 2)}
   ]
 }`
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-        }),
-      }
-    )
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1500,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    })
 
     if (!response.ok) {
       const errorText = await response.text()
@@ -75,7 +78,7 @@ ${JSON.stringify(sampleRows, null, 2)}
     }
 
     const data = await response.json()
-    const textContent = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+    const textContent = data.content.find((c) => c.type === 'text')?.text ?? ''
 
     const cleaned = textContent.replace(/```json|```/g, '').trim()
     const parsed = JSON.parse(cleaned)
