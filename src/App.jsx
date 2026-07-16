@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import WelcomeScreen from './components/WelcomeScreen'
 import GuideScreen from './components/GuideScreen'
 import UploadScreen from './components/UploadScreen'
@@ -16,6 +16,18 @@ function App() {
   const [rawData, setRawData] = useState(null)
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isProcessing, setIsProcessing] = useState(false)
+  const [theme, setTheme] = useState('dark')
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (theme === 'dark') {
+      root.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
+    }
+  }, [theme])
+
+  const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
 
   const handleFileReady = async (file) => {
     setIsProcessing(true)
@@ -45,11 +57,18 @@ function App() {
   }
 
   if (step === 'welcome') {
-    return <WelcomeScreen onGetStarted={() => setStep('guide')} />
+    return <WelcomeScreen onGetStarted={() => setStep('guide')} theme={theme} onToggleTheme={toggleTheme} />
   }
 
   if (step === 'guide') {
-    return <GuideScreen onContinue={() => setStep('upload')} onBack={() => setStep('welcome')} />
+    return (
+      <GuideScreen
+        onContinue={() => setStep('upload')}
+        onBack={() => setStep('welcome')}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+      />
+    )
   }
 
   if (step === 'upload') {
@@ -59,12 +78,20 @@ function App() {
         onUseSampleData={handleUseSampleData}
         isProcessing={isProcessing}
         onBack={() => setStep('guide')}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
     )
   }
 
   return (
-    <Layout activeTab={activeTab} onTabChange={setActiveTab} onBack={() => setStep('upload')}>
+    <Layout
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+      onBack={() => setStep('upload')}
+      theme={theme}
+      onToggleTheme={toggleTheme}
+    >
       {activeTab === 'dashboard' && <Dashboard analysis={analysis} />}
       {activeTab === 'recommendations' && <RecommendationsScreen analysis={analysis} />}
     </Layout>

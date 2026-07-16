@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion'
-import { Upload, Target, Sparkles, ArrowRight, ArrowLeft } from 'lucide-react'
+import { Upload, Target, Sparkles, ArrowRight, ArrowLeft, Sun, Moon } from 'lucide-react'
 
 const steps = [
   {
     icon: Upload,
-    title: 'ارفع بياناتك',
-    desc: 'أي ملف CSV أو Excel فيه بيانات أكاديمية — درجات، حضور، أو أي مؤشرات أداء',
+    title: 'رفع البيانات',
+    desc: 'أي ملف CSV أو Excel يحتوي على بيانات أكاديمية — درجات، حضور، أو أي مؤشرات أداء',
   },
   {
     icon: Target,
@@ -19,24 +19,30 @@ const steps = [
   },
 ]
 
-function GuideScreen({ onContinue, onBack }) {
+function GuideScreen({ onContinue, onBack, theme, onToggleTheme }) {
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center px-6 py-12 relative">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center px-6 py-12 relative transition-colors">
 
       <button
         onClick={onBack}
-        className="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors flex items-center gap-1"
+        className="absolute top-6 right-6 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
       >
-        <ArrowLeft size={18} />
-        رجوع
+        <ArrowLeft size={20} />
+      </button>
+
+      <button
+        onClick={onToggleTheme}
+        className="absolute top-6 left-6 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+      >
+        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
       </button>
 
       <motion.h2
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-2xl md:text-3xl font-bold text-white mb-12 text-center"
+        className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-12 text-center"
       >
-      EduTrack كيف يشتغل نظام 
+       EduTrack كيف يشتغل نظام 
       </motion.h2>
 
       <div className="grid gap-6 md:grid-cols-3 max-w-4xl w-full mb-12">
@@ -48,13 +54,13 @@ function GuideScreen({ onContinue, onBack }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.15 }}
-              className="bg-slate-800 rounded-2xl p-6 text-center border border-slate-700"
+              className="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center border border-slate-200 dark:border-slate-700"
             >
-              <div className="bg-blue-600/20 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Icon size={26} className="text-blue-400" />
+              <div className="bg-blue-600/10 dark:bg-blue-600/20 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon size={26} className="text-blue-600 dark:text-blue-400" />
               </div>
-              <h3 className="text-white font-semibold mb-2">{step.title}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{step.desc}</p>
+              <h3 className="text-slate-900 dark:text-white font-semibold mb-2">{step.title}</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{step.desc}</p>
             </motion.div>
           )
         })}
