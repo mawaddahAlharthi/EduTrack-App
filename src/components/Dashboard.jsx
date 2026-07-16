@@ -26,8 +26,7 @@ function Dashboard({ analysis }) {
   ]
 
   return (
-    <div id="dashboard-content" className="min-h-screen bg-slate-50 dark:bg-slate-900 px-6 py-10 transition-colors">
-      <div className="flex items-center justify-between mb-8">
+<div id="dashboard-content" className="min-h-screen bg-slate-50 dark:bg-slate-900 px-6 py-10 pt-20 md:pt-10 transition-colors">      <div className="flex items-center justify-between mb-8">
         <motion.h1
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
