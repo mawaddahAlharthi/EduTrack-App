@@ -1,48 +1,45 @@
 import { motion } from 'framer-motion'
-import { Upload, Target, Sparkles, ArrowRight, ArrowLeft, Sun, Moon } from 'lucide-react'
+import { Upload, Target, Sparkles, ArrowRight, ArrowLeft, Sun, Moon, Languages } from 'lucide-react'
 
-const steps = [
-  {
-    icon: Upload,
-    title: 'رفع البيانات',
-    desc: 'أي ملف CSV أو Excel يحتوي على بيانات أكاديمية — درجات، حضور، أو أي مؤشرات أداء',
-  },
-  {
-    icon: Target,
-    title: 'تحليل ذكي تلقائي',
-    desc: 'النظام يفهم شكل بياناتك بنفسه ويستنتج أفضل التحليلات الممكنة منها',
-  },
-  {
-    icon: Sparkles,
-    title: 'داشبورد وتوصيات',
-    desc: 'رسوم بيانية تفاعلية وتوصيات مبنية على الذكاء الاصطناعي جاهزة للاستخدام',
-  },
-]
+function GuideScreen({ onContinue, onBack, theme, onToggleTheme, lang, onToggleLang, t }) {
+  const steps = [
+    { icon: Upload, title: t.step1Title, desc: t.step1Desc },
+    { icon: Target, title: t.step2Title, desc: t.step2Desc },
+    { icon: Sparkles, title: t.step3Title, desc: t.step3Desc },
+  ]
 
-function GuideScreen({ onContinue, onBack, theme, onToggleTheme }) {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center px-6 py-12 relative transition-colors">
 
       <button
         onClick={onBack}
-        className="absolute top-6 right-6 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+        className="absolute top-6 right-6 rtl:right-6 rtl:left-auto ltr:left-6 ltr:right-auto text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
       >
-        <ArrowLeft size={20} />
+        <ArrowLeft size={20} className={lang === 'en' ? 'rotate-180' : ''} />
       </button>
 
-      <button
-        onClick={onToggleTheme}
-        className="absolute top-6 left-6 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-      >
-        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-      </button>
+      <div className="absolute top-6 left-6 rtl:left-6 rtl:right-auto ltr:right-6 ltr:left-auto flex items-center gap-3">
+        <button
+          onClick={onToggleTheme}
+          className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+        >
+          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+        <button
+          onClick={onToggleLang}
+          className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1"
+        >
+          <Languages size={20} />
+          <span className="text-xs font-medium">{lang === 'ar' ? 'EN' : 'ع'}</span>
+        </button>
+      </div>
 
       <motion.h2
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-12 text-center"
       >
-       EduTrack كيف يشتغل نظام 
+        {t.title}
       </motion.h2>
 
       <div className="grid gap-6 md:grid-cols-3 max-w-4xl w-full mb-12">
@@ -75,8 +72,8 @@ function GuideScreen({ onContinue, onBack, theme, onToggleTheme }) {
         onClick={onContinue}
         className="bg-blue-600 hover:bg-blue-500 text-white font-medium px-8 py-3 rounded-full transition-colors flex items-center gap-2"
       >
-        المتابعة لرفع البيانات
-        <ArrowRight size={18} />
+        {t.continue}
+        <ArrowRight size={18} className={lang === 'en' ? 'rotate-180' : ''} />
       </motion.button>
 
     </div>

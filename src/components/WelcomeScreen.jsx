@@ -1,16 +1,25 @@
 import { motion } from 'framer-motion'
-import { Sun, Moon } from 'lucide-react'
+import { Sun, Moon, Languages } from 'lucide-react'
 
-function WelcomeScreen({ onGetStarted, theme, onToggleTheme }) {
+function WelcomeScreen({ onGetStarted, theme, onToggleTheme, lang, onToggleLang, t }) {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center px-6 text-center relative transition-colors">
 
-      <button
-        onClick={onToggleTheme}
-        className="absolute top-6 left-6 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-      >
-        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-      </button>
+      <div className="absolute top-6 left-6 flex items-center gap-3">
+        <button
+          onClick={onToggleTheme}
+          className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+        >
+          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+        <button
+          onClick={onToggleLang}
+          className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1"
+        >
+          <Languages size={20} />
+          <span className="text-xs font-medium">{lang === 'ar' ? 'EN' : 'ع'}</span>
+        </button>
+      </div>
 
       <motion.div
         animate={{ scale: [1, 1.05, 1] }}
@@ -26,7 +35,7 @@ function WelcomeScreen({ onGetStarted, theme, onToggleTheme }) {
         transition={{ duration: 0.6 }}
         className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4"
       >
-        EduTrack
+        {t.title}
       </motion.h1>
 
       <motion.p
@@ -35,8 +44,7 @@ function WelcomeScreen({ onGetStarted, theme, onToggleTheme }) {
         transition={{ duration: 0.6, delay: 0.2 }}
         className="text-slate-600 dark:text-slate-400 max-w-md mb-10 leading-relaxed"
       >
-        منصة ذكية تحلل بيانات الطلاب الأكاديمية وتساعد لجان الجودة على اكتشاف
-        الفجوات وبناء توصيات قائمة على الأدلة
+        {t.description}
       </motion.p>
 
       <motion.button
@@ -48,7 +56,7 @@ function WelcomeScreen({ onGetStarted, theme, onToggleTheme }) {
         onClick={onGetStarted}
         className="bg-blue-600 hover:bg-blue-500 text-white font-medium px-8 py-3 rounded-full transition-colors"
       >
-        ابدأ الآن
+        {t.getStarted}
       </motion.button>
 
     </div>

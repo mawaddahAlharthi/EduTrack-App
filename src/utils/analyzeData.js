@@ -97,8 +97,8 @@ function computeNormalizedGrade(row, scoreColumns, columnMaxes) {
   return normalizedValues.reduce((a, b) => a + b, 0) / normalizedValues.length
 }
 
-export function analyzeData(data, aiOverride = null) {
-  const detected = detectColumns(data)
+export function analyzeData(data, aiOverride = null, lang = 'ar') {
+    const detected = detectColumns(data)
   if (!detected || detected.scoreColumns.length === 0) return null
 
   // لو الذكاء الاصطناعي حدد أعمدة ولابيلات، نستخدمها بدل الاكتشاف التلقائي
@@ -190,28 +190,52 @@ export function analyzeData(data, aiOverride = null) {
   const weakest = [...componentAverages].sort((a, b) => a.mastered - b.mastered)[0]
   const strongest = [...componentAverages].sort((a, b) => b.mastered - a.mastered)[0]
 
-  const recommendations = [
-    {
-      id: 1,
-      title: `ضعف واضح في ${weakest.clo}`,
-      reason: `متوسط أداء الطلاب في هذا المكوّن هو ${weakest.mastered}% من الدرجة الكاملة، الأضعف بين كل المكونات`,
-      action: 'يُنصح بمراجعة طريقة تدريس هذا الجزء أو تخصيص جلسات تقوية إضافية',
-    },
-    {
-      id: 2,
-      title: `${atRiskCount} طالب مصنفين في فئة عالية الخطر`,
-      reason: attendanceColumn
-        ? 'اعتماداً على تدني الدرجات مع انخفاض نسبة الحضور معاً'
-        : 'اعتماداً على انخفاض الدرجات مقارنة بباقي الطلاب',
-      action: 'يُنصح بتفعيل بروتوكول الإنذار الأكاديمي والتواصل المباشر مع هؤلاء الطلاب',
-    },
-    {
-      id: 3,
-      title: `تميز ملحوظ في ${strongest.clo}`,
-      reason: `متوسط أداء الطلاب في هذا المكوّن هو ${strongest.mastered}% من الدرجة الكاملة، الأعلى بين كل المكونات`,
-      action: 'يمكن الاستفادة من هذا النجاح كنموذج يُطبّق على المكونات الأضعف',
-    },
-  ]
+  const recommendations = {
+    ar: [
+      {
+        id: 1,
+        title: `ضعف واضح في ${weakest.clo}`,
+        reason: `متوسط أداء الطلاب في هذا المكوّن هو ${weakest.mastered}% من الدرجة الكاملة، الأضعف بين كل المكونات`,
+        action: 'يُنصح بمراجعة طريقة تدريس هذا الجزء أو تخصيص جلسات تقوية إضافية',
+      },
+      {
+        id: 2,
+        title: `${atRiskCount} طالب مصنفين في فئة عالية الخطر`,
+        reason: attendanceColumn
+          ? 'اعتماداً على تدني الدرجات مع انخفاض نسبة الحضور معاً'
+          : 'اعتماداً على انخفاض الدرجات مقارنة بباقي الطلاب',
+        action: 'يُنصح بتفعيل بروتوكول الإنذار الأكاديمي والتواصل المباشر مع هؤلاء الطلاب',
+      },
+      {
+        id: 3,
+        title: `تميز ملحوظ في ${strongest.clo}`,
+        reason: `متوسط أداء الطلاب في هذا المكوّن هو ${strongest.mastered}% من الدرجة الكاملة، الأعلى بين كل المكونات`,
+        action: 'يمكن الاستفادة من هذا النجاح كنموذج يُطبّق على المكونات الأضعف',
+      },
+    ],
+    en: [
+      {
+        id: 1,
+        title: `Clear weakness in ${weakest.clo}`,
+        reason: `Average student performance in this component is ${weakest.mastered}%, the lowest among all components`,
+        action: 'Consider reviewing the teaching approach for this part or scheduling additional reinforcement sessions',
+      },
+      {
+        id: 2,
+        title: `${atRiskCount} students classified as high risk`,
+        reason: attendanceColumn
+          ? 'Based on both low grades and low attendance combined'
+          : 'Based on lower grades compared to the rest of the students',
+        action: 'Consider activating the academic warning protocol and direct communication with these students',
+      },
+      {
+        id: 3,
+        title: `Notable strength in ${strongest.clo}`,
+        reason: `Average student performance in this component is ${strongest.mastered}%, the highest among all components`,
+        action: 'This success can be used as a model applied to the weaker components',
+      },
+    ],
+  }
 
  // لو الذكاء الاصطناعي أعطانا توصيات مبنية على الفهم الفعلي، نستخدمها بدل التوصيات الآلية
   const finalRecommendations =
@@ -224,6 +248,7 @@ export function analyzeData(data, aiOverride = null) {
     riskDistribution,
     componentAverages,
     recommendations: finalRecommendations,
+    isAIRecommendation: !!(aiOverride && aiOverride.recommendations && aiOverride.recommendations.length > 0),
     scoreColumns,
     usedAI: !!(aiOverride && aiOverride.scoreColumns),
   }

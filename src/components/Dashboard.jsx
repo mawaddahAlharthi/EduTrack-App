@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import { Users, TrendingUp, Award, AlertTriangle, Download } from 'lucide-react'
-import { downloadDashboardAsImage } from '../utils/generateReport'
 import {
   PieChart, Pie, Cell, ResponsiveContainer,
   BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
@@ -11,33 +10,45 @@ import {
   sampleCLOMastery,
   sampleRecommendations,
 } from '../data/sampleData'
+import { downloadDashboardAsImage } from '../utils/generateReport'
 
-function Dashboard({ analysis }) {
+function Dashboard({ analysis, t, lang }) {
   const summary = analysis?.summary ?? sampleSummary
   const riskDistribution = analysis?.riskDistribution ?? sampleRiskDistribution
   const componentAverages = analysis?.componentAverages ?? sampleCLOMastery
-  const recommendations = analysis?.recommendations ?? sampleRecommendations
+
+  const recommendations = analysis?.recommendations
+    ? (analysis.isAIRecommendation ? analysis.recommendations : analysis.recommendations[lang] || analysis.recommendations.ar)
+    : (sampleRecommendations[lang] || sampleRecommendations.ar)
+
+
+  const riskLabels = {
+    'منخفض الخطر': t.lowRisk,
+    'متوسط الخطر': t.mediumRisk,
+    'عالي الخطر': t.highRisk,
+  }
 
   const kpis = [
-    { label: 'إجمالي الطلاب', value: summary.totalStudents, icon: Users, color: 'text-blue-500 dark:text-blue-400' },
-    { label: 'نسبة النجاح', value: `${summary.passRate}%`, icon: TrendingUp, color: 'text-green-500 dark:text-green-400' },
-    { label: 'متوسط الدرجات', value: summary.averageGrade, icon: Award, color: 'text-yellow-500 dark:text-yellow-400' },
-    { label: 'طلاب في خطر', value: summary.atRiskCount, icon: AlertTriangle, color: 'text-red-500 dark:text-red-400' },
+    { label: t.totalStudents, value: summary.totalStudents, icon: Users, color: 'text-blue-500 dark:text-blue-400' },
+    { label: t.passRate, value: `${summary.passRate}%`, icon: TrendingUp, color: 'text-green-500 dark:text-green-400' },
+    { label: t.avgGrade, value: summary.averageGrade, icon: Award, color: 'text-yellow-500 dark:text-yellow-400' },
+    { label: t.atRisk, value: summary.atRiskCount, icon: AlertTriangle, color: 'text-red-500 dark:text-red-400' },
   ]
 
   return (
-<div id="dashboard-content" className="min-h-screen bg-slate-50 dark:bg-slate-900 px-6 py-10 pt-20 md:pt-10 transition-colors">      <div className="flex items-center justify-between mb-8">
+    <div id="dashboard-content" className="min-h-screen bg-slate-50 dark:bg-slate-900 px-6 py-10 pt-20 md:pt-10 transition-colors">
+      <div className="flex items-center justify-between mb-8">
         <motion.h1
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white"
         >
-          لوحة التحكم
+          {t.title}
         </motion.h1>
 
         <button
           onClick={() => downloadDashboardAsImage('dashboard-content')}
-          title="تحميل الداشبورد"
+          title="Download"
           className="flex items-center justify-center w-10 h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
         >
           <Download size={18} />
@@ -71,7 +82,7 @@ function Dashboard({ analysis }) {
           transition={{ delay: 0.3 }}
           className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6"
         >
-          <h3 className="text-slate-900 dark:text-white font-semibold mb-4">توزيع مستوى الخطر</h3>
+          <h3 className="text-slate-900 dark:text-white font-semibold mb-4">{t.riskDistribution}</h3>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie
@@ -95,7 +106,7 @@ function Dashboard({ analysis }) {
             {riskDistribution.map((entry, i) => (
               <div key={i} className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                 <span className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
-                {entry.name}
+                {riskLabels[entry.name] || entry.name}
               </div>
             ))}
           </div>
@@ -107,7 +118,7 @@ function Dashboard({ analysis }) {
           transition={{ delay: 0.4 }}
           className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6"
         >
-          <h3 className="text-slate-900 dark:text-white font-semibold mb-4">متوسط الأداء حسب المكوّن</h3>
+          <h3 className="text-slate-900 dark:text-white font-semibold mb-4">{t.componentPerformance}</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={componentAverages}>
               <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" />
@@ -128,7 +139,7 @@ function Dashboard({ analysis }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
-        <h3 className="text-slate-900 dark:text-white font-semibold mb-4">توصيات الذكاء الاصطناعي</h3>
+        <h3 className="text-slate-900 dark:text-white font-semibold mb-4">{t.aiRecommendations}</h3>
         <div className="grid md:grid-cols-3 gap-4">
           {recommendations.map((rec) => (
             <div

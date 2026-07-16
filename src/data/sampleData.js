@@ -34,23 +34,45 @@ export const sampleCLOMastery = [
 ]
 
 // توصيات الذكاء الاصطناعي
-export const sampleRecommendations = [
-  {
-    id: 1,
-    title: 'ضعف إتقان CLO3',
-    reason: 'نسبة إتقان الطلاب لهذا المخرج أقل من المتوسط (67%)',
-    action: 'تفعيل ورشة عملية تطبيقية على المفاهيم التحليلية المرتبطة بـ CLO3',
-  },
-  {
-    id: 2,
-    title: 'غياب متكرر لدى فئة عالية الخطر',
-    reason: '12 طالب مصنفين ضمن High Risk بسبب انخفاض الحضور والتقييم المستمر',
-    action: 'تفعيل بروتوكول الإنذار الأكاديمي والتواصل المباشر مع المرشد الأكاديمي',
-  },
-  {
-    id: 3,
-    title: 'تميز أكاديمي ملحوظ',
-    reason: 'مجموعة من الطلاب حققوا أداء يفوق المعدل المستهدف بثبات',
-    action: 'ترشيحهم كموجهين أكاديميين (Peer Mentors) لدعم زملائهم',
-  },
-]
+export const sampleRecommendations = {
+  ar: [
+    {
+      id: 1,
+      title: 'ضعف إتقان CLO3',
+      reason: 'نسبة إتقان الطلاب لهذا المخرج أقل من المتوسط (67%)',
+      action: 'تفعيل ورشة عملية تطبيقية على المفاهيم التحليلية المرتبطة بـ CLO3',
+    },
+    {
+      id: 2,
+      title: 'غياب متكرر لدى فئة عالية الخطر',
+      reason: '12 طالب مصنفين ضمن High Risk بسبب انخفاض الحضور والتقييم المستمر',
+      action: 'تفعيل بروتوكول الإنذار الأكاديمي والتواصل المباشر مع المرشد الأكاديمي',
+    },
+    {
+      id: 3,
+      title: 'تميز أكاديمي ملحوظ',
+      reason: 'مجموعة من الطلاب حققوا أداء يفوق المعدل المستهدف بثبات',
+      action: 'ترشيحهم كموجهين أكاديميين (Peer Mentors) لدعم زملائهم',
+    },
+  ],
+  en: [
+    {
+      id: 1,
+      title: 'Weak Mastery of CLO3',
+      reason: 'Student mastery rate for this outcome is below average (67%)',
+      action: 'Activate a hands-on workshop on the analytical concepts related to CLO3',
+    },
+    {
+      id: 2,
+      title: 'Recurring Absence in High-Risk Group',
+      reason: '12 students classified as High Risk due to low attendance and continuous assessment',
+      action: 'Activate the academic warning protocol and direct communication with the academic advisor',
+    },
+    {
+      id: 3,
+      title: 'Notable Academic Excellence',
+      reason: 'A group of students consistently achieved performance above the target average',
+      action: 'Nominate them as Peer Mentors to support their classmates',
+    },
+  ],
+}

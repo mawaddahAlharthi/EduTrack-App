@@ -2,9 +2,10 @@ import { motion } from 'framer-motion'
 import { Lightbulb, ArrowLeft } from 'lucide-react'
 import { sampleRecommendations } from '../data/sampleData'
 
-function RecommendationsScreen({ analysis }) {
-  const recommendations = analysis?.recommendations ?? sampleRecommendations
-
+function RecommendationsScreen({ analysis, t, lang }) {
+  const recommendations = analysis?.recommendations
+    ? (analysis.isAIRecommendation ? analysis.recommendations : analysis.recommendations[lang] || analysis.recommendations.ar)
+    : (sampleRecommendations[lang] || sampleRecommendations.ar)
   return (
     <div className="p-6 md:p-10 bg-slate-50 dark:bg-slate-900 min-h-screen transition-colors">
       <motion.h1
@@ -12,10 +13,10 @@ function RecommendationsScreen({ analysis }) {
         animate={{ opacity: 1, y: 0 }}
         className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-2"
       >
-        توصيات الذكاء الاصطناعي
+        {t.title}
       </motion.h1>
       <p className="text-slate-500 dark:text-slate-400 mb-8">
-        توصيات مبنية على تحليل بياناتك الفعلية، مرتبة حسب الأولوية
+        {t.description}
       </p>
 
       <div className="flex flex-col gap-4 max-w-3xl">

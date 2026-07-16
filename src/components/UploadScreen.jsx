@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { UploadCloud, FileSpreadsheet, Sparkles, ArrowLeft, Sun, Moon } from 'lucide-react'
+import { UploadCloud, FileSpreadsheet, Sparkles, ArrowLeft, Sun, Moon, Languages } from 'lucide-react'
 
-function UploadScreen({ onFileReady, onUseSampleData, isProcessing, onBack, theme, onToggleTheme }) {
+function UploadScreen({ onFileReady, onUseSampleData, isProcessing, onBack, theme, onToggleTheme, lang, onToggleLang, t }) {
   const [isDragging, setIsDragging] = useState(false)
   const [fileName, setFileName] = useState(null)
 
@@ -30,26 +30,35 @@ function UploadScreen({ onFileReady, onUseSampleData, isProcessing, onBack, them
         onClick={onBack}
         className="absolute top-6 right-6 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
       >
-        <ArrowLeft size={20} />
+        <ArrowLeft size={20} className={lang === 'en' ? 'rotate-180' : ''} />
       </button>
 
-      <button
-        onClick={onToggleTheme}
-        className="absolute top-6 left-6 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-      >
-        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-      </button>
+      <div className="absolute top-6 left-6 flex items-center gap-3">
+        <button
+          onClick={onToggleTheme}
+          className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+        >
+          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+        <button
+          onClick={onToggleLang}
+          className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1"
+        >
+          <Languages size={20} />
+          <span className="text-xs font-medium">{lang === 'ar' ? 'EN' : 'ع'}</span>
+        </button>
+      </div>
 
       <motion.h2
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-3 text-center"
       >
-        رفع ملف البيانات
+        {t.title}
       </motion.h2>
 
       <p className="text-slate-500 dark:text-slate-400 mb-10 text-center max-w-md">
-        يقبل التطبيق ملفات جداول البيانات (Excel أو CSV) التي تحتوي على بيانات طلابية، ويتعرف تلقائياً على محتواها
+        {t.description}
       </p>
 
       <motion.div
@@ -77,13 +86,13 @@ function UploadScreen({ onFileReady, onUseSampleData, isProcessing, onBack, them
             <>
               <FileSpreadsheet size={40} className="text-green-500 dark:text-green-400 mb-4" />
               <p className="text-slate-900 dark:text-white font-medium">{fileName}</p>
-              <p className="text-slate-500 text-sm mt-1">تم اختيار الملف ✓</p>
+              <p className="text-slate-500 text-sm mt-1">{t.fileSelected}</p>
             </>
           ) : (
             <>
               <UploadCloud size={40} className="text-blue-500 dark:text-blue-400 mb-4" />
-              <p className="text-slate-900 dark:text-white font-medium mb-1">اسحب الملف هنا</p>
-              <p className="text-slate-500 text-sm">أو اضغط للاختيار من جهازك</p>
+              <p className="text-slate-900 dark:text-white font-medium mb-1">{t.dropHere}</p>
+              <p className="text-slate-500 text-sm">{t.orBrowse}</p>
             </>
           )}
         </label>
@@ -99,7 +108,7 @@ function UploadScreen({ onFileReady, onUseSampleData, isProcessing, onBack, them
         className="mt-8 flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 px-6 py-3 rounded-full transition-colors"
       >
         <Sparkles size={18} className="text-yellow-500 dark:text-yellow-400" />
-        تصفح نموذج تجريبي
+        {t.tryDemo}
       </motion.button>
 
       {isProcessing && (
@@ -108,7 +117,7 @@ function UploadScreen({ onFileReady, onUseSampleData, isProcessing, onBack, them
           animate={{ opacity: 1 }}
           className="mt-6 text-blue-600 dark:text-blue-400 text-sm"
         >
-          جاري تحليل البيانات...
+          {t.processing}
         </motion.p>
       )}
 

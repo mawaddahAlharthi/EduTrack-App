@@ -9,6 +9,7 @@ import { parseFile, getFileSample } from './utils/parseFile'
 import { analyzeData } from './utils/analyzeData'
 import { tryAIAnalyze } from './utils/aiAnalyze'
 import { sampleStudents } from './data/sampleData'
+import { translations } from './utils/translations'
 
 function App() {
   const [step, setStep] = useState('welcome')
@@ -17,6 +18,9 @@ function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isProcessing, setIsProcessing] = useState(false)
   const [theme, setTheme] = useState('dark')
+  const [lang, setLang] = useState('ar')
+
+  const t = translations[lang]
 
   useEffect(() => {
     const root = document.documentElement
@@ -27,7 +31,13 @@ function App() {
     }
   }, [theme])
 
+  useEffect(() => {
+    document.documentElement.lang = lang
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
+  }, [lang])
+
   const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
+  const toggleLang = () => setLang((l) => (l === 'ar' ? 'en' : 'ar'))
 
   const handleFileReady = async (file) => {
     setIsProcessing(true)
@@ -41,7 +51,7 @@ function App() {
     setIsProcessing(false)
 
     if (!result) {
-      alert('عذراً، لم يتم العثور على أعمدة درجات كافية بهذا الملف. جرّب ملفاً آخر أو استخدم البيانات التجريبية.')
+      alert(t.upload.errorNoColumns)
       return
     }
 
@@ -57,7 +67,16 @@ function App() {
   }
 
   if (step === 'welcome') {
-    return <WelcomeScreen onGetStarted={() => setStep('guide')} theme={theme} onToggleTheme={toggleTheme} />
+    return (
+      <WelcomeScreen
+        onGetStarted={() => setStep('guide')}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        lang={lang}
+        onToggleLang={toggleLang}
+        t={t.welcome}
+      />
+    )
   }
 
   if (step === 'guide') {
@@ -67,6 +86,9 @@ function App() {
         onBack={() => setStep('welcome')}
         theme={theme}
         onToggleTheme={toggleTheme}
+        lang={lang}
+        onToggleLang={toggleLang}
+        t={t.guide}
       />
     )
   }
@@ -80,6 +102,9 @@ function App() {
         onBack={() => setStep('guide')}
         theme={theme}
         onToggleTheme={toggleTheme}
+        lang={lang}
+        onToggleLang={toggleLang}
+        t={t.upload}
       />
     )
   }
@@ -91,9 +116,12 @@ function App() {
       onBack={() => setStep('upload')}
       theme={theme}
       onToggleTheme={toggleTheme}
+      lang={lang}
+      onToggleLang={toggleLang}
+      t={t.layout}
     >
-      {activeTab === 'dashboard' && <Dashboard analysis={analysis} />}
-      {activeTab === 'recommendations' && <RecommendationsScreen analysis={analysis} />}
+      {activeTab === 'dashboard' && <Dashboard analysis={analysis} t={t.dashboard} lang={lang} />}
+      {activeTab === 'recommendations' && <RecommendationsScreen analysis={analysis} t={t.recommendationsScreen} lang={lang} />}
     </Layout>
   )
 }
