@@ -50,6 +50,14 @@ function Layout({ activeTab, onTabChange, children, onBack }) {
         {children}
       </main>
 
+      {/* زر رجوع عائم - يظهر بشاشات الجوال فقط */}
+      <button
+        onClick={onBack}
+        className="md:hidden fixed top-4 right-4 bg-slate-800 border border-slate-700 text-slate-300 rounded-full p-3 shadow-lg z-50"
+      >
+        <ArrowLeft size={20} />
+      </button>
+
       {/* الشريط السفلي - يظهر بشاشات الجوال فقط */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-800 border-t border-slate-700 flex justify-around py-3 z-50">
         {tabs.map((tab) => {

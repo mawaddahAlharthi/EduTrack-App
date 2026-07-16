@@ -36,7 +36,7 @@ function GuideScreen({ onContinue, onBack }) {
         animate={{ opacity: 1, y: 0 }}
         className="text-2xl md:text-3xl font-bold text-white mb-12 text-center"
       >
-        كيف يشتغل EduTrack؟
+       كيف يشتغل نظام EduTrack؟
       </motion.h2>
 
       <div className="grid gap-6 md:grid-cols-3 max-w-4xl w-full mb-12">
