@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
-import { Users, TrendingUp, Award, AlertTriangle } from 'lucide-react'
+import { Users, TrendingUp, Award, AlertTriangle, Download } from 'lucide-react'
+import { downloadDashboardAsImage } from '../utils/generateReport'
 import {
   PieChart, Pie, Cell, ResponsiveContainer,
   BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
@@ -25,14 +26,24 @@ function Dashboard({ analysis }) {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 px-6 py-10 transition-colors">
-      <motion.h1
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-8"
-      >
-        لوحة التحكم
-      </motion.h1>
+    <div id="dashboard-content" className="min-h-screen bg-slate-50 dark:bg-slate-900 px-6 py-10 transition-colors">
+      <div className="flex items-center justify-between mb-8">
+        <motion.h1
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white"
+        >
+          لوحة التحكم
+        </motion.h1>
+
+        <button
+          onClick={() => downloadDashboardAsImage('dashboard-content')}
+          title="تحميل الداشبورد"
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+        >
+          <Download size={18} />
+        </button>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {kpis.map((kpi, i) => {
