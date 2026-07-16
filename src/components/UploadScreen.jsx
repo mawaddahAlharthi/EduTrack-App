@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { UploadCloud, FileSpreadsheet, Sparkles } from 'lucide-react'
+import { UploadCloud, FileSpreadsheet, Sparkles, ArrowLeft } from 'lucide-react'
 
-function UploadScreen({ onFileReady, onUseSampleData, isProcessing }) {
+function UploadScreen({ onFileReady, onUseSampleData, isProcessing, onBack }) {
   const [isDragging, setIsDragging] = useState(false)
   const [fileName, setFileName] = useState(null)
 
@@ -24,19 +24,25 @@ function UploadScreen({ onFileReady, onUseSampleData, isProcessing }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center px-6">
-      
+    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center px-6 relative">
+
+      <button
+        onClick={onBack}
+        className="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors flex items-center gap-1"
+      >
+        <ArrowLeft size={18} />
+        رجوع
+      </button>
+
       <motion.h2
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-2xl md:text-3xl font-bold text-white mb-3 text-center"
       >
-        ارفعي ملف البيانات
+        رفع ملف البيانات
       </motion.h2>
 
-      <p className="text-slate-400 mb-10 text-center max-w-md">
-        أي ملف CSV أو Excel فيه بيانات طلابية — التطبيق بيفهم شكله تلقائياً
-      </p>
+      
 
       {/* منطقة السحب والإفلات */}
       <motion.div
@@ -67,8 +73,8 @@ function UploadScreen({ onFileReady, onUseSampleData, isProcessing }) {
           ) : (
             <>
               <UploadCloud size={40} className="text-blue-400 mb-4" />
-              <p className="text-white font-medium mb-1">اسحبي الملف هنا</p>
-              <p className="text-slate-500 text-sm">أو اضغطي للاختيار من جهازك</p>
+              <p className="text-white font-medium mb-1">اسحب الملف هنا</p>
+              <p className="text-slate-500 text-sm">أو اضغط للاختيار من جهازك</p>
             </>
           )}
         </label>
@@ -84,7 +90,7 @@ function UploadScreen({ onFileReady, onUseSampleData, isProcessing }) {
         className="mt-8 flex items-center gap-2 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500 px-6 py-3 rounded-full transition-colors"
       >
         <Sparkles size={18} className="text-yellow-400" />
-        جرّبي بيانات تجريبية بدون رفع ملف
+       تصفح نموذج تجريبي
       </motion.button>
 
       {isProcessing && (

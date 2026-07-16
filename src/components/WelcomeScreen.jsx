@@ -5,13 +5,13 @@ function WelcomeScreen({ onGetStarted }) {
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center px-6 text-center">
       
-      {/* الشعار المتحرك */}
+      {/* اللوقو */}
       <motion.div
-        animate={{ scale: [1, 1.08, 1] }}
+        animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-        className="bg-blue-600/20 p-6 rounded-full mb-8"
+        className="mb-8"
       >
-        <GraduationCap size={56} className="text-blue-400" />
+        <img src="/logo.png" alt="EduTrack Logo" className="w-80 h-80 object-contain" />
       </motion.div>
 
       {/* العنوان */}
@@ -21,7 +21,7 @@ function WelcomeScreen({ onGetStarted }) {
         transition={{ duration: 0.6 }}
         className="text-3xl md:text-4xl font-bold text-white mb-4"
       >
-        EduTrack
+        
       </motion.h1>
 
       {/* الوصف */}

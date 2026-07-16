@@ -21,17 +21,15 @@ function App() {
     setIsProcessing(true)
     const data = await parseFile(file)
 
-    // نحاول الذكاء الاصطناعي أول، بصمت وبدون ما نوقف المستخدم لو فشل
     const sample = getFileSample(data)
     const aiResult = sample ? await tryAIAnalyze(sample.columns, sample.sampleRows) : null
 
-    // القواعد الذكية تشتغل دائماً كأساس، وتتحسن لو توفر تحليل AI
     const result = analyzeData(data, aiResult)
 
     setIsProcessing(false)
 
     if (!result) {
-      alert('عذراً، ما قدرنا نلقى أعمدة درجات كافية بهذا الملف. جربي ملف آخر أو استخدمي البيانات التجريبية.')
+      alert('عذراً، لم يتم العثور على أعمدة درجات كافية بهذا الملف. جرّب ملفاً آخر أو استخدم البيانات التجريبية.')
       return
     }
 
@@ -51,7 +49,7 @@ function App() {
   }
 
   if (step === 'guide') {
-    return <GuideScreen onContinue={() => setStep('upload')} />
+    return <GuideScreen onContinue={() => setStep('upload')} onBack={() => setStep('welcome')} />
   }
 
   if (step === 'upload') {
@@ -60,14 +58,13 @@ function App() {
         onFileReady={handleFileReady}
         onUseSampleData={handleUseSampleData}
         isProcessing={isProcessing}
+        onBack={() => setStep('guide')}
       />
     )
   }
 
-  
-
   return (
-    <Layout activeTab={activeTab} onTabChange={setActiveTab}>
+    <Layout activeTab={activeTab} onTabChange={setActiveTab} onBack={() => setStep('upload')}>
       {activeTab === 'dashboard' && <Dashboard analysis={analysis} />}
       {activeTab === 'recommendations' && <RecommendationsScreen analysis={analysis} />}
     </Layout>

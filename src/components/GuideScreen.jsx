@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
-import { Upload, Target, Sparkles, ArrowRight } from 'lucide-react'
+import { Upload, Target, Sparkles, ArrowRight, ArrowLeft } from 'lucide-react'
 
 const steps = [
   {
     icon: Upload,
-    title: 'ارفعي بياناتك',
+    title: 'ارفع بياناتك',
     desc: 'أي ملف CSV أو Excel فيه بيانات أكاديمية — درجات، حضور، أو أي مؤشرات أداء',
   },
   {
@@ -19,10 +19,18 @@ const steps = [
   },
 ]
 
-function GuideScreen({ onContinue }) {
+function GuideScreen({ onContinue, onBack }) {
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center px-6 py-12">
-      
+    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center px-6 py-12 relative">
+
+      <button
+        onClick={onBack}
+        className="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors flex items-center gap-1"
+      >
+        <ArrowLeft size={18} />
+        رجوع
+      </button>
+
       <motion.h2
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

@@ -1,18 +1,29 @@
-import { LayoutDashboard, ClipboardList } from 'lucide-react'
+import { LayoutDashboard, ClipboardList, ArrowLeft } from 'lucide-react'
 
 const tabs = [
   { id: 'dashboard', label: 'لوحة التحكم', icon: LayoutDashboard },
   { id: 'recommendations', label: 'التوصيات', icon: ClipboardList },
 ]
 
-function Layout({ activeTab, onTabChange, children }) {
+function Layout({ activeTab, onTabChange, children, onBack }) {
   return (
     <div className="min-h-screen bg-slate-900 flex">
       
       {/* الشريط الجانبي - يظهر بشاشات الكمبيوتر فقط */}
       <aside className="hidden md:flex flex-col w-64 bg-slate-800 border-l border-slate-700 p-6">
-        <h2 className="text-white font-bold text-xl mb-10">EduTrack</h2>
+        <div className="flex items-center gap-2 mb-6">
+          <img src="/logo.png" alt="EduTrack" className="w-20 h-20 object-contain" />
+          <h2 className="text-white font-bold text-xl">EduTrack</h2>
+        </div>
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-6 text-sm"
+        >
+          <ArrowLeft size={16} />
+          رفع ملف جديد
+        </button>
         <nav className="flex flex-col gap-2">
+
           {tabs.map((tab) => {
             const Icon = tab.icon
             const isActive = activeTab === tab.id
